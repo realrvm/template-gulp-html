@@ -1,0 +1,44 @@
+@import "./styles/reset";
+@import "./styles/fonts";
+$base-font-size: 16px;
+
+html {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  font-size: $base-font-size;
+}
+
+:root {
+  --black: hsl(0, 0%, 0%);
+}
+
+*,
+*::before,
+*::after {
+  outline: none;
+  box-sizing: inherit;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+  line-height: 1.4;
+  font-weight: 400;
+  color: var(--black);
+}
+
+img {
+  max-width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+li {
+  list-style: none;
+}
+
+@import "./styles/sass";
+@import "./styles/common";

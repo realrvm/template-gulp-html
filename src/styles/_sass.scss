@@ -1,0 +1,38 @@
+@use "sass:math";
+
+@function strip-units($number) {
+  @return math.div($number, ($number * 0 + 1));
+}
+
+@function to-fixed($float, $digits: 2) {
+  $sass-precision: 5;
+
+  @if $digits > $sass-precision {
+    @warn "Sass sets default precision to #{$sass-precision} digits";
+  }
+
+  $pow: math.pow(10, $digits);
+  @return math.div(round($float * $pow), $pow);
+}
+
+@function rem($size, $base: $base-font-size) {
+  $rem-value: to-fixed(calc(strip-units($size) / strip-units($base))) + rem;
+  @return $rem-value;
+}
+
+@function lh($height, $base: 16) {
+  $lh-value: math.div(strip-units($height), strip-units($base));
+  @return to-fixed($lh-value, 1);
+}
+
+@mixin maxq($query) {
+  @media screen and (max-width: $query) {
+    @content;
+  }
+}
+
+@mixin minq($query) {
+  @media screen and (min-width: $query) {
+    @content;
+  }
+}
