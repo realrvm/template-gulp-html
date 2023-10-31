@@ -1,5 +1,6 @@
-import * as gulp from "gulp";
-import dartSass from "sass";
+// @ts-check
+import gulp from "gulp";
+import * as dartSass from "sass";
 import gulpSass from "gulp-sass";
 import concat from "gulp-concat";
 import terser from "gulp-terser";
@@ -10,8 +11,10 @@ import sourcemaps from "gulp-sourcemaps";
 import imagemin, { gifsicle, mozjpeg, optipng, svgo } from "gulp-imagemin";
 import ts from "gulp-typescript";
 import pug from "gulp-pug";
+import { rollup } from "rollup";
+import rollupTypescript from "@rollup/plugin-typescript";
 
-const { src, dest, watch, parallel, series } = gulp.default;
+const { src, dest, watch, parallel, series } = gulp;
 const sass = gulpSass(dartSass);
 const tsProject = ts.createProject("tsconfig.json");
 
@@ -19,7 +22,7 @@ const tsProject = ts.createProject("tsconfig.json");
 function convertJS() {
   return src([
     //"node_modules/jquery/dist/jquery.min.js",
-    "src/index.js",
+    "src/assets/js/main.js",
   ])
     .pipe(sourcemaps.init())
     .pipe(concat("main.min.js"))
@@ -29,16 +32,17 @@ function convertJS() {
     .pipe(browserSync.stream());
 }
 
-// минификация ts
-function convertTS() {
-  const result = src("src/index.ts").pipe(tsProject());
-  return result.js
-    .pipe(sourcemaps.init())
-    .pipe(concat("main.min.js"))
-    .pipe(terser())
-    .pipe(sourcemaps.write("."))
-    .pipe(dest("src/assets/js"))
-    .pipe(browserSync.stream());
+// бандлер rollup
+function bundleTS() {
+  return rollup({
+    input: "src/index.ts",
+    plugins: [rollupTypescript()],
+  }).then((bundle) => {
+    return bundle.write({
+      file: "src/assets/js/main.js",
+      format: "es",
+    });
+  });
 }
 
 // конверация  и минификация стилей
@@ -58,11 +62,7 @@ function convertImages() {
   return src("src/img/**/*")
     .pipe(
       imagemin([
-        gifsicle({ interlaced: true }),
-        mozjpeg({ quality: 75, progressive: true }),
-        optipng({ optimizationLevel: 5 }),
-        svgo({
-          plugins: [
+        gifsicle({ interlaced: true }), mozjpeg({ quality: 75, progressive: true }), optipng({ optimizationLevel: 5 }), svgo({ plugins: [
             {
               name: "removeViewBox",
               active: true,
@@ -73,7 +73,7 @@ function convertImages() {
             },
           ],
         }),
-      ])
+      ]),
     )
     .pipe(dest("src/assets/img"))
     .pipe(browserSync.stream());
@@ -100,7 +100,7 @@ function browserSyncInit() {
 function watchFiles() {
   // watch("src/index.js", convertJS);
   watch("src/**/*.pug", convertPugToHtml);
-  watch("src/index.ts", convertTS);
+  watch("src/**/*.ts", createJS);
   watch("src/**/*.scss", convertStyles);
   watch("src/img/**/*", convertImages);
   watch("src/*.html").on("change", browserSync.reload);
@@ -124,17 +124,18 @@ function buildDist() {
     ],
     {
       base: "src",
-    }
+    },
   ).pipe(dest("dist"));
 }
 
+const createJS = series(bundleTS, convertJS)
+
 export const build = series(cleanDist, buildDist);
 export default parallel(
-  // convertJS,
+  createJS,
   convertPugToHtml,
-  convertTS,
   convertStyles,
   convertImages,
   browserSyncInit,
-  watchFiles
+  watchFiles,
 );

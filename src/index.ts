@@ -1,3 +1,5 @@
+import { user } from "./ts/example";
+
 function init() {
   function createComponent(text: string) {
     const h1 = document.createElement("h1");
@@ -6,7 +8,7 @@ function init() {
     body.append(h1);
   }
 
-  createComponent("Gulp!!!");
+  createComponent(user);
 }
 
 document.addEventListener("DOMContentLoaded", init);
