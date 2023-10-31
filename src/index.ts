@@ -1,4 +1,4 @@
-import { user } from "./ts/example";
+import { user, fn } from "@/ts/example";
 
 function init() {
   function createComponent(text: string) {
@@ -8,7 +8,7 @@ function init() {
     body.append(h1);
   }
 
-  createComponent(user);
+  createComponent(fn(user));
 }
 
 document.addEventListener("DOMContentLoaded", init);

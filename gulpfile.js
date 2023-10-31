@@ -9,14 +9,13 @@ import autoPrefixer from "gulp-autoprefixer";
 import clean from "gulp-clean";
 import sourcemaps from "gulp-sourcemaps";
 import imagemin, { gifsicle, mozjpeg, optipng, svgo } from "gulp-imagemin";
-import ts from "gulp-typescript";
 import pug from "gulp-pug";
 import { rollup } from "rollup";
 import rollupTypescript from "@rollup/plugin-typescript";
+import eslint from "gulp-eslint";
 
 const { src, dest, watch, parallel, series } = gulp;
 const sass = gulpSass(dartSass);
-const tsProject = ts.createProject("tsconfig.json");
 
 // минификация js
 function convertJS() {
@@ -62,7 +61,11 @@ function convertImages() {
   return src("src/img/**/*")
     .pipe(
       imagemin([
-        gifsicle({ interlaced: true }), mozjpeg({ quality: 75, progressive: true }), optipng({ optimizationLevel: 5 }), svgo({ plugins: [
+        gifsicle({ interlaced: true }),
+        mozjpeg({ quality: 75, progressive: true }),
+        optipng({ optimizationLevel: 5 }),
+        svgo({
+          plugins: [
             {
               name: "removeViewBox",
               active: true,
@@ -94,6 +97,14 @@ function browserSyncInit() {
       baseDir: "src",
     },
   });
+}
+
+// linting
+function testTsLint() {
+  return src("src/**/*.ts")
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 }
 
 // обновление страницы при изменении файлов
@@ -128,10 +139,12 @@ function buildDist() {
   ).pipe(dest("dist"));
 }
 
-const createJS = series(bundleTS, convertJS)
+const createJS = series(bundleTS, convertJS);
 
-export const build = series(cleanDist, buildDist);
+export const build = series(testTsLint, cleanDist, buildDist);
+export const test = parallel(testTsLint);
 export default parallel(
+  testTsLint,
   createJS,
   convertPugToHtml,
   convertStyles,

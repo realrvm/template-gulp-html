@@ -1,4 +1,7 @@
-const user = 'example';
+const user = "example";
+function fn(a) {
+    return a.toUpperCase();
+}
 
 function init() {
     function createComponent(text) {
@@ -7,6 +10,6 @@ function init() {
         h1.textContent = text;
         body.append(h1);
     }
-    createComponent(user);
+    createComponent(fn(user));
 }
 document.addEventListener("DOMContentLoaded", init);
