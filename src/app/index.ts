@@ -1,4 +1,4 @@
-import { user, fn } from "@/ts/example";
+import { user, fn } from "@/app/ts/example";
 
 function init() {
   function createComponent(text: string) {

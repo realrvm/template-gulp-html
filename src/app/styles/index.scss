@@ -1,5 +1,5 @@
-@import "./styles/reset";
-@import "./styles/fonts";
+@import "./reset";
+@import "./fonts";
 $base-font-size: 16px;
 
 html {
@@ -40,5 +40,5 @@ li {
   list-style: none;
 }
 
-@import "./styles/sass";
-@import "./styles/common";
+@import "./variables/sass";
+@import "./variables/common";

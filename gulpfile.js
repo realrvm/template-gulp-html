@@ -34,7 +34,7 @@ function convertJS() {
 // бандлер rollup
 function bundleTS() {
   return rollup({
-    input: "src/index.ts",
+    input: "src/app/index.ts",
     plugins: [rollupTypescript()],
   }).then((bundle) => {
     return bundle.write({
@@ -46,7 +46,7 @@ function bundleTS() {
 
 // конверация  и минификация стилей
 function convertStyles() {
-  return src("src/style.scss")
+  return src("src/app/styles/index.scss")
     .pipe(sourcemaps.init())
     .pipe(autoPrefixer())
     .pipe(concat("style.min.css"))
@@ -58,7 +58,7 @@ function convertStyles() {
 
 // оптимизация изображений
 function convertImages() {
-  return src("src/img/**/*")
+  return src("src/shared/img/**/*")
     .pipe(
       imagemin([
         gifsicle({ interlaced: true }),
@@ -113,7 +113,7 @@ function watchFiles() {
   watch("src/**/*.pug", convertPugToHtml);
   watch("src/**/*.ts", createJS);
   watch("src/**/*.scss", convertStyles);
-  watch("src/img/**/*", convertImages);
+  watch("src/shared/img/**/*", convertImages);
   watch("src/*.html").on("change", browserSync.reload);
 }
 
