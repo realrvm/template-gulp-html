@@ -85,7 +85,7 @@ function convertImages() {
 // конвертация из pug в html
 function convertPugToHtml() {
   return src("src/index.pug")
-    .pipe(pug({ pretty: true }))
+    .pipe(pug({ basedir: "src" }))
     .pipe(dest("src/"))
     .pipe(browserSync.stream());
 }
@@ -93,6 +93,7 @@ function convertPugToHtml() {
 // инициализация browser-sync
 function browserSyncInit() {
   browserSync.init({
+    port: 5173,
     server: {
       baseDir: "src",
     },
