@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "npx gulp",
     "test": "npx gulp test",
+    "svpug": "svpug -i src/shared/svg -o src/shared/mixins/svg --ignore-existing",
     "build": "npx gulp build"
   },
   "devDependencies": {
@@ -31,6 +32,7 @@
     "gulp-terser": "^2.1.0",
     "rollup": "^4.2.0",
     "sass": "^1.69.5",
+    "svpug": "^0.1.4",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2"
   }
