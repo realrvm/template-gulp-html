@@ -1,13 +1,11 @@
-doctype html
-html(lang= 'ru')
-  head
-    meta(charset='utf-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    link(rel='stylesheet', href='/assets/css/style.min.css')
-    title= 'Gulp'
-  body
-    include /widgets/header
-    main.main
-      include /entities/intro
-    include /widgets/footer
-    script(type='text/javascript' src='/assets/js/main.min.js')
+extends /shared/ui/layout
+
+block append head
+  title= 'Main page'
+
+block content
+  include /widgets/header
+  main
+    include /entities/intro
+  include /widgets/footer
+  append script

@@ -6,8 +6,9 @@
 
 - gulp
 - sass
+- svpug
+- rollup
 - typescript
-- gulp-typescript
 - gulp-autoprefixer
 - gulp-concat
 - gulp-terser
